@@ -7,6 +7,14 @@ namespace SkyboxReplacer
     public class Options
     {
 
+        [XmlElement("cubemapDay")]
+        [DynamicDropDown("Cubemap - day", nameof(CubemapManager), nameof(CubemapManager.GetDayCubemaps))]
+        public string CubemapDay { set; get; } = CubemapManager.Vanilla;
+
+        [XmlElement("cubemapNight")]
+        [DynamicDropDown("Cubemap - night", nameof(CubemapManager), nameof(CubemapManager.GetNightCubemaps))]
+        public string CubemapNight { set; get; } = CubemapManager.Vanilla;
+
         [XmlElement("cubemapSize")]
         [Textfield("Cubemap size")]
         public int CubemapSize { set; get; } = 1024;

@@ -30,6 +30,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CubemapManager.cs" />
     <Compile Include="LoadingExtension.cs" />
     <Compile Include="Mod.cs" />
     <Compile Include="Options.cs" />
@@ -38,6 +39,9 @@
     <Compile Include="OptionsFramework\Attibutes\CheckboxAttribute.cs" />
     <Compile Include="OptionsFramework\Attibutes\DontTranslateDescriptionAttribute.cs" />
     <Compile Include="OptionsFramework\Attibutes\DropDownAttribute.cs" />
+    <Compile Include="OptionsFramework\Attibutes\EnumDropDownAttribute.cs" />
+    <Compile Include="OptionsFramework\Attibutes\DynamicDropDownAttribute.cs" />
+    <Compile Include="OptionsFramework\Attibutes\DropDownEntry.cs" />
     <Compile Include="OptionsFramework\Attibutes\HideConditionAttribute.cs" />
     <Compile Include="OptionsFramework\Attibutes\LabelAttribute.cs" />
     <Compile Include="OptionsFramework\Attibutes\OptionsAttribute.cs" />
