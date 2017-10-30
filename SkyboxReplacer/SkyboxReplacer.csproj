@@ -67,6 +67,15 @@
       <HintPath>C:\Games\Steam\steamapps\common\Cities_Skylines\Cities_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="example\cubemap.png" />
+    <Content Include="example\negx.png" />
+    <Content Include="example\negy.png" />
+    <Content Include="example\negz.png" />
+    <Content Include="example\posx.png" />
+    <Content Include="example\posy.png" />
+    <Content Include="example\posz.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>mkdir "$(LOCALAPPDATA)\Colossal Order\Cities_Skylines\Addons\Mods\$(ProjectName)"
