@@ -1,4 +1,4 @@
-[submodule "OptionsFramework"]
+[submodule "SkyboxReplacer/OptionsFramework"]
 	path = SkyboxReplacer/OptionsFramework
 	url = git@github.com:earalov/OptionsFramework.git
 	branch = customization/Skylines-CubemapReplacer
