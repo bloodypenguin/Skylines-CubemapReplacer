@@ -12,7 +12,7 @@ namespace SkyboxReplacer
         public string CubemapDay { set; get; } = SkyboxReplacer.Vanilla;
 
         [XmlElement("cubemapNight")]
-        [DynamicDropDown("Cubemap - night", nameof(CubemapManager), nameof(CubemapManager.GetNightCubemaps), null, nameof(SkyboxReplacer), nameof(SkyboxReplacer.SetNightCubemap))]
+        [DynamicDropDown("Cubemap - night [This has no effect ATM]", nameof(CubemapManager), nameof(CubemapManager.GetNightCubemaps), null, nameof(SkyboxReplacer), nameof(SkyboxReplacer.SetNightCubemap))]
         public string CubemapNight { set; get; } = SkyboxReplacer.Vanilla;
 
         [XmlElement("minimizeHorizon")]
