@@ -1,4 +1,5 @@
 ﻿using ICities;
+using SkyboxReplacer.OptionsFramework;
 
 namespace SkyboxReplacer
 {
@@ -17,7 +18,7 @@ namespace SkyboxReplacer
         public override void OnLevelUnloading()
         {
             inGame = false;
-            SkyboxReplacer.RevertCubemap();
+            SkyboxReplacer.Revert();
         }
     }
 }

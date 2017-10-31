@@ -1,76 +1,127 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using SkyboxReplacer.Configuration;
 using SkyboxReplacer.OptionsFramework;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace SkyboxReplacer
 {
     public class SkyboxReplacer
     {
-        private static Cubemap vanillaCubemap;
-        private static Cubemap customCubemap;
+        public const string Vanilla = "vanilla";
+
+        private static Cubemap vanillaDayCubemap;
+        private static Cubemap customDayCubemap;
         private static float defaultHorizon;
         private static float defaultFog;
 
         public static void Initialize()
         {
-            vanillaCubemap = Object.FindObjectOfType<RenderProperties>().m_cubemap;
+            vanillaDayCubemap = Object.FindObjectOfType<RenderProperties>().m_cubemap;
             defaultFog = Object.FindObjectOfType<RenderProperties>().m_fogHeight;
             defaultHorizon = Object.FindObjectOfType<FogProperties>().m_HorizonHeight;
             MinimizeHorizon(OptionsWrapper<Options>.Options.MinimizeHorizon);
-            ReplaceCubemap();
+            SetDayCubemap(OptionsWrapper<Options>.Options.CubemapDay);
+            SetNightCubemap(OptionsWrapper<Options>.Options.CubemapNight);
         }
 
-        public static void RevertCubemap()
+        public static void Revert()
+        {
+            RevertDayCubemap();
+            RevertNightCubemap();
+        }
+
+        public static void SetDayCubemap(string code)
         {
             if (!LoadingExtension.inGame)
             {
                 return;
             }
-            if (customCubemap == null)
+            if (Vanilla.Equals(code))
             {
+                RevertDayCubemap();
                 return;
             }
-            GameObject.Destroy(customCubemap);
-            customCubemap = null;
-            Shader.SetGlobalTexture("_EnvironmentCubemap", vanillaCubemap);
+            ReplaceCubemap(CubemapManager.GetDayReplacement(code));
         }
 
-        public static void ReplaceCubemap()
+        public static void SetNightCubemap(string code)
         {
             if (!LoadingExtension.inGame)
             {
                 return;
             }
-            RevertCubemap();
-            var cubemap = new Cubemap(OptionsWrapper<Options>.Options.CubemapSize, TextureFormat.ARGB32, true)
+            if (Vanilla.Equals(code))
+            {
+                RevertNightCubemap();
+                return;
+            }
+            ReplaceCubemap(CubemapManager.GetNightReplacement(code));
+        }
+
+        private static void RevertDayCubemap()
+        {
+            if (customDayCubemap == null)
+            {
+                return;
+            }
+            GameObject.Destroy(customDayCubemap);
+            customDayCubemap = null;
+            Shader.SetGlobalTexture("_EnvironmentCubemap", vanillaDayCubemap);
+        }
+
+        private static void RevertNightCubemap()
+        {
+            //TODO(earalov): implement
+        }
+
+        public static void ReloadSelectedCubemaps()
+        {
+            SetDayCubemap(OptionsWrapper<Options>.Options.CubemapDay);
+            SetNightCubemap(OptionsWrapper<Options>.Options.CubemapNight);
+        }
+
+        private static void ReplaceCubemap(CubemapReplacement replacement)
+        {
+            if (replacement.isNight)
+            {
+                RevertNightCubemap();
+            }
+            else
+            {
+                RevertDayCubemap();
+            }
+            var cubemap = new Cubemap(replacement.size, TextureFormat.ARGB32, true)
             {
                 name = "CubemapReplacerCubemap",
                 wrapMode = TextureWrapMode.Clamp
             };
-            if (OptionsWrapper<Options>.Options.SplitFormat)
+            var prefix = replacement.filePrefix;
+            if (replacement.splitFormat)
             {
-                var posx = Util.LoadTextureFromFile(Path.Combine(Util.AssemblyDirectory, "posx.png"));
+                var posx = Util.LoadTextureFromFile(Path.Combine(replacement.directory, prefix + "posx.png"));
                 SetCubemapFaceSolid(posx, CubemapFace.PositiveX, cubemap, 2, 0);
                 Object.Destroy(posx);
-                var posy = Util.LoadTextureFromFile(Path.Combine(Util.AssemblyDirectory, "posy.png"));
+                var posy = Util.LoadTextureFromFile(Path.Combine(replacement.directory, prefix + "posy.png"));
                 SetCubemapFaceSolid(posy, CubemapFace.PositiveY, cubemap, 2, 0);
                 Object.Destroy(posy);
-                var posz = Util.LoadTextureFromFile(Path.Combine(Util.AssemblyDirectory, "posz.png"));
+                var posz = Util.LoadTextureFromFile(Path.Combine(replacement.directory, prefix + "posz.png"));
                 SetCubemapFaceSolid(posz, CubemapFace.PositiveZ, cubemap, 2, 0);
                 Object.Destroy(posz);
-                var negx = Util.LoadTextureFromFile(Path.Combine(Util.AssemblyDirectory, "negx.png"));
+                var negx = Util.LoadTextureFromFile(Path.Combine(replacement.directory, prefix + "negx.png"));
                 SetCubemapFaceSolid(negx, CubemapFace.NegativeX, cubemap, 2, 0);
                 Object.Destroy(negx);
-                var negy = Util.LoadTextureFromFile(Path.Combine(Util.AssemblyDirectory, "negy.png"));
+                var negy = Util.LoadTextureFromFile(Path.Combine(replacement.directory, prefix + "negy.png"));
                 SetCubemapFaceSolid(negy, CubemapFace.NegativeY, cubemap, 2, 0);
                 Object.Destroy(negy);
-                var negz = Util.LoadTextureFromFile(Path.Combine(Util.AssemblyDirectory, "negz.png"));
+                var negz = Util.LoadTextureFromFile(Path.Combine(replacement.directory, prefix + "negz.png"));
                 SetCubemapFaceSolid(negz, CubemapFace.NegativeZ, cubemap, 2, 0);
                 Object.Destroy(negz);
             }
             else
             {
-                var texture = Util.LoadTextureFromFile(Path.Combine(Util.AssemblyDirectory, "cubemap.png"));
+                var texture = Util.LoadTextureFromFile(Path.Combine(replacement.directory, prefix + "cubemap.png"));
                 SetCubemapFaceSolid(texture, CubemapFace.PositiveX, cubemap, 1, 2);
                 SetCubemapFaceSolid(texture, CubemapFace.PositiveY, cubemap, 0, 1);
                 SetCubemapFaceSolid(texture, CubemapFace.PositiveZ, cubemap, 1, 1);
@@ -83,8 +134,16 @@ namespace SkyboxReplacer
             cubemap.filterMode = FilterMode.Trilinear;
             cubemap.SmoothEdges();
             cubemap.Apply();
-            Shader.SetGlobalTexture("_EnvironmentCubemap", cubemap);
-            customCubemap = cubemap;
+            if (replacement.isNight)
+            {
+                //TODO(earalov): implement
+                Object.Destroy(cubemap);
+            }
+            else
+            {
+                Shader.SetGlobalTexture("_EnvironmentCubemap", cubemap);
+                customDayCubemap = cubemap;
+            }
         }
 
         public static void MinimizeHorizon(bool minimize)
@@ -93,8 +152,8 @@ namespace SkyboxReplacer
             {
                 return;
             }
-            Object.FindObjectOfType<FogProperties>().m_HorizonHeight = minimize ? float.Epsilon : defaultHorizon;
-            Object.FindObjectOfType<RenderProperties>().m_fogHeight = minimize ? float.Epsilon : defaultFog;
+            Object.FindObjectOfType<FogProperties>().m_HorizonHeight = minimize ? Single.Epsilon : defaultHorizon;
+            Object.FindObjectOfType<RenderProperties>().m_fogHeight = minimize ? Single.Epsilon : defaultFog;
         }
 
         private static void SetCubemapFaceSolid(Texture2D texture, CubemapFace face, Cubemap cubemap, int positionY, int positionX)

@@ -30,6 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Configuration\CubemapReplacement.cs" />
+    <Compile Include="Configuration\CubemapReplacements.cs" />
     <Compile Include="CubemapManager.cs" />
     <Compile Include="LoadingExtension.cs" />
     <Compile Include="Mod.cs" />
