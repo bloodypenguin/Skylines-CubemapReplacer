@@ -31,7 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Configuration\CubemapReplacement.cs" />
-    <Compile Include="Configuration\CubemapReplacements.cs" />
+    <Compile Include="Configuration\CubemapReplacementsConfig.cs" />
     <Compile Include="CubemapManager.cs" />
     <Compile Include="LoadingExtension.cs" />
     <Compile Include="Mod.cs" />
@@ -75,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="example\cubemap.png" />
+    <Content Include="example\CubemapReplacements.xml" />
     <Content Include="example\negx.png" />
     <Content Include="example\negy.png" />
     <Content Include="example\negz.png" />

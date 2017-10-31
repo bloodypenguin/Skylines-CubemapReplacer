@@ -1,26 +1,24 @@
 ﻿using System.IO;
+using System.Xml.Serialization;
 
 namespace SkyboxReplacer.Configuration
 {
     public class CubemapReplacement
     {
-        public int size;
-        public bool splitFormat;
-        public bool isNight;
-        public string code;
-        public string description;
-        public string filePrefix;
-        public string directory;
+        [XmlAttribute("size")]
+        public int Size = 1024;
+        [XmlAttribute("is_split_format")]
+        public bool SplitFormat = false ;
+        [XmlAttribute("is_night")]
+        public bool IsNight = false;
+        [XmlAttribute("code")]
+        public string Code = "";
+        [XmlAttribute("description")]
+        public string Description = "";
+        [XmlAttribute("file_prefix")]
+        public string FilePrefix = "";
 
-        public CubemapReplacement(int size, bool splitFormat, bool isNight, string code, string description, string filePrefix, string directory)
-        {
-            this.size = size;
-            this.splitFormat = splitFormat;
-            this.isNight = isNight;
-            this.code = code;
-            this.description = description;
-            this.filePrefix = filePrefix;
-            this.directory = directory;
-        }
+        [XmlIgnore]
+        public string Directory;
     }
 }

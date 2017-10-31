@@ -1,5 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using ColossalFramework;
+using ColossalFramework.Plugins;
 using SkyboxReplacer.Configuration;
 using SkyboxReplacer.OptionsFramework.Attibutes;
 
@@ -7,28 +12,32 @@ namespace SkyboxReplacer
 {
     public static class CubemapManager
     {
-        private static readonly Dictionary<string, CubemapReplacement> DayCubemaps = new Dictionary<string, CubemapReplacement>
-        {
-            { "example1piece", new CubemapReplacement(1024, false, false, "example1piece", "Example - 1 piece", "", Util.AssemblyDirectory)},
-            { "example6piece", new CubemapReplacement(1024, true, false, "example6piece", "Example - 6 piece", "", Util.AssemblyDirectory)}
-        };
+        private const string ModConfigName = "CubemapReplacements.xml";
+        private static bool imported;
 
-        private static readonly Dictionary<string, CubemapReplacement> NightCubemaps = new Dictionary<string, CubemapReplacement>();
+        private static readonly Dictionary<string, CubemapReplacement> DayCubemaps =
+            new Dictionary<string, CubemapReplacement>();
+
+        private static readonly Dictionary<string, CubemapReplacement> NightCubemaps =
+            new Dictionary<string, CubemapReplacement>();
 
 
         public static DropDownEntry<string>[] GetDayCubemaps()
         {
+            ImportFromMods();
             var entries = new List<DropDownEntry<string>>()
             {
                 new DropDownEntry<string>(SkyboxReplacer.Vanilla, "Vanilla"),
             };
             //TODO(earalov): load custom cubemaps
-            entries.AddRange(DayCubemaps.Select(kvp => new DropDownEntry<string>(kvp.Key, kvp.Value.description)).ToArray());
+            entries.AddRange(DayCubemaps.Select(kvp => new DropDownEntry<string>(kvp.Key, kvp.Value.Description))
+                .ToArray());
             return entries.ToArray();
         }
 
         public static DropDownEntry<string>[] GetNightCubemaps()
         {
+            ImportFromMods();
             return new List<DropDownEntry<string>>
             {
                 new DropDownEntry<string>(SkyboxReplacer.Vanilla, "Vanilla"),
@@ -44,6 +53,64 @@ namespace SkyboxReplacer
         public static CubemapReplacement GetNightReplacement(string code)
         {
             return NightCubemaps[code];
+        }
+
+        public static void ImportFromMods()
+        {
+            if (imported)
+            {
+                return;
+            }
+            imported = true;
+            foreach (var pluginInfo in Singleton<PluginManager>.instance.GetPluginsInfo()
+                .Where(pluginInfo => pluginInfo.isEnabled))
+            {
+                try
+                {
+                    var config = CubemapReplacementsConfig.Deserialize(Path.Combine(pluginInfo.modPath, ModConfigName));
+                    if (config == null)
+                    {
+                        continue;
+                    }
+                    foreach (var replacement in config.Replacements)
+                    {
+                        if (replacement.Code.IsNullOrWhiteSpace())
+                        {
+                            UnityEngine.Debug.LogError("Invalid CubemapReplacements.xml of mod " + pluginInfo.name + ": replacement code is empty!");
+                            continue;
+                        }
+                        if (replacement.Description.IsNullOrWhiteSpace())
+                        {
+                            UnityEngine.Debug.LogError("Invalid CubemapReplacements.xml of mod " + pluginInfo.name + ": replacement description is empty!");
+                            continue;
+                        }
+                        replacement.Directory = pluginInfo.modPath;
+                        if (replacement.IsNight)
+                        {
+                            if (NightCubemaps.ContainsKey(replacement.Code))
+                            {
+                                UnityEngine.Debug.LogError("Invalid CubemapReplacements.xml of mod " + pluginInfo.name + ": night replacement code is already present!");
+                                continue;
+                            }
+                            NightCubemaps.Add(replacement.Code, replacement);
+                        }
+                        else
+                        {
+                            if (DayCubemaps.ContainsKey(replacement.Code))
+                            {
+                                UnityEngine.Debug.LogError("Invalid CubemapReplacements.xml of mod " + pluginInfo.name + ": day replacement code is already present!");
+                                continue;
+                            }
+                            DayCubemaps.Add(replacement.Code, replacement);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    UnityEngine.Debug.Log("Error while parsing CubemapReplacements.xml of mod " + pluginInfo.name);
+                    UnityEngine.Debug.LogException(e);
+                }
+            }
         }
     }
 }

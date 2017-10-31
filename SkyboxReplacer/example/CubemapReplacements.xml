@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CubemapReplacementsConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CubemapReplacements>
+    <CubemapReplacement size="1024" is_split_format="false" is_night="false" code="example1piece" description="Example - 1 piece" file_prefix = "" />
+    <CubemapReplacement size="1024" is_split_format="true" is_night="false" code="example6piece" description="Example - 6 piece" file_prefix = "" />
+  </CubemapReplacements>
+</CubemapReplacementsConfig>

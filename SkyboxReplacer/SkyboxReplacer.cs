@@ -84,7 +84,7 @@ namespace SkyboxReplacer
 
         private static void ReplaceCubemap(CubemapReplacement replacement)
         {
-            if (replacement.isNight)
+            if (replacement.IsNight)
             {
                 RevertNightCubemap();
             }
@@ -92,36 +92,36 @@ namespace SkyboxReplacer
             {
                 RevertDayCubemap();
             }
-            var cubemap = new Cubemap(replacement.size, TextureFormat.ARGB32, true)
+            var cubemap = new Cubemap(replacement.Size, TextureFormat.ARGB32, true)
             {
                 name = "CubemapReplacerCubemap",
                 wrapMode = TextureWrapMode.Clamp
             };
-            var prefix = replacement.filePrefix;
-            if (replacement.splitFormat)
+            var prefix = replacement.FilePrefix;
+            if (replacement.SplitFormat)
             {
-                var posx = Util.LoadTextureFromFile(Path.Combine(replacement.directory, prefix + "posx.png"));
+                var posx = Util.LoadTextureFromFile(Path.Combine(replacement.Directory, prefix + "posx.png"));
                 SetCubemapFaceSolid(posx, CubemapFace.PositiveX, cubemap, 2, 0);
                 Object.Destroy(posx);
-                var posy = Util.LoadTextureFromFile(Path.Combine(replacement.directory, prefix + "posy.png"));
+                var posy = Util.LoadTextureFromFile(Path.Combine(replacement.Directory, prefix + "posy.png"));
                 SetCubemapFaceSolid(posy, CubemapFace.PositiveY, cubemap, 2, 0);
                 Object.Destroy(posy);
-                var posz = Util.LoadTextureFromFile(Path.Combine(replacement.directory, prefix + "posz.png"));
+                var posz = Util.LoadTextureFromFile(Path.Combine(replacement.Directory, prefix + "posz.png"));
                 SetCubemapFaceSolid(posz, CubemapFace.PositiveZ, cubemap, 2, 0);
                 Object.Destroy(posz);
-                var negx = Util.LoadTextureFromFile(Path.Combine(replacement.directory, prefix + "negx.png"));
+                var negx = Util.LoadTextureFromFile(Path.Combine(replacement.Directory, prefix + "negx.png"));
                 SetCubemapFaceSolid(negx, CubemapFace.NegativeX, cubemap, 2, 0);
                 Object.Destroy(negx);
-                var negy = Util.LoadTextureFromFile(Path.Combine(replacement.directory, prefix + "negy.png"));
+                var negy = Util.LoadTextureFromFile(Path.Combine(replacement.Directory, prefix + "negy.png"));
                 SetCubemapFaceSolid(negy, CubemapFace.NegativeY, cubemap, 2, 0);
                 Object.Destroy(negy);
-                var negz = Util.LoadTextureFromFile(Path.Combine(replacement.directory, prefix + "negz.png"));
+                var negz = Util.LoadTextureFromFile(Path.Combine(replacement.Directory, prefix + "negz.png"));
                 SetCubemapFaceSolid(negz, CubemapFace.NegativeZ, cubemap, 2, 0);
                 Object.Destroy(negz);
             }
             else
             {
-                var texture = Util.LoadTextureFromFile(Path.Combine(replacement.directory, prefix + "cubemap.png"));
+                var texture = Util.LoadTextureFromFile(Path.Combine(replacement.Directory, prefix + "cubemap.png"));
                 SetCubemapFaceSolid(texture, CubemapFace.PositiveX, cubemap, 1, 2);
                 SetCubemapFaceSolid(texture, CubemapFace.PositiveY, cubemap, 0, 1);
                 SetCubemapFaceSolid(texture, CubemapFace.PositiveZ, cubemap, 1, 1);
@@ -134,7 +134,7 @@ namespace SkyboxReplacer
             cubemap.filterMode = FilterMode.Trilinear;
             cubemap.SmoothEdges();
             cubemap.Apply();
-            if (replacement.isNight)
+            if (replacement.IsNight)
             {
                 //TODO(earalov): implement
                 Object.Destroy(cubemap);
