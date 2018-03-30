@@ -38,11 +38,14 @@ namespace SkyboxReplacer
         public static DropDownEntry<string>[] GetNightCubemaps()
         {
             ImportFromMods();
-            return new List<DropDownEntry<string>>
+            var entries = new List<DropDownEntry<string>>()
             {
                 new DropDownEntry<string>(SkyboxReplacer.Vanilla, "Vanilla"),
-            }.ToArray();
+            };
             //TODO(earalov): load custom cubemaps
+            entries.AddRange(NightCubemaps.Select(kvp => new DropDownEntry<string>(kvp.Key, kvp.Value.Description))
+                .ToArray());
+            return entries.ToArray();
         }
 
         public static CubemapReplacement GetDayReplacement(string code)

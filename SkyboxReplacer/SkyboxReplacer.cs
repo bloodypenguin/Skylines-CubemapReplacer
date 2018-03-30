@@ -13,12 +13,17 @@ namespace SkyboxReplacer
 
         private static Cubemap vanillaDayCubemap;
         private static Cubemap customDayCubemap;
+
+        private static Cubemap vanillaNightCubemap;
+        private static Cubemap customNightCubemap;
+
         private static float defaultHorizon;
         private static float defaultFog;
 
         public static void Initialize()
         {
             vanillaDayCubemap = Object.FindObjectOfType<RenderProperties>().m_cubemap;
+            vanillaNightCubemap = Object.FindObjectOfType<DayNightProperties>().m_OuterSpaceCubemap;
             defaultFog = Object.FindObjectOfType<RenderProperties>().m_fogHeight;
             defaultHorizon = Object.FindObjectOfType<FogProperties>().m_HorizonHeight;
             MinimizeHorizon(OptionsWrapper<Options>.Options.MinimizeHorizon);
@@ -73,7 +78,13 @@ namespace SkyboxReplacer
 
         private static void RevertNightCubemap()
         {
-            //TODO(earalov): implement
+            if (customNightCubemap == null)
+            {
+                return;
+            }
+            GameObject.Destroy(customNightCubemap);
+            customNightCubemap = null;
+            Object.FindObjectOfType<DayNightProperties>().m_OuterSpaceCubemap = vanillaNightCubemap;
         }
 
         public static void ReloadSelectedCubemaps()
@@ -136,8 +147,8 @@ namespace SkyboxReplacer
             cubemap.Apply();
             if (replacement.IsNight)
             {
-                //TODO(earalov): implement
-                Object.Destroy(cubemap);
+                Object.FindObjectOfType<DayNightProperties>().m_OuterSpaceCubemap = cubemap;
+                customNightCubemap = cubemap;
             }
             else
             {

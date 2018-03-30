@@ -3,5 +3,6 @@
   <CubemapReplacements>
     <CubemapReplacement size="1024" is_split_format="false" is_night="false" code="example1piece" description="Example - 1 piece" file_prefix = "" />
     <CubemapReplacement size="1024" is_split_format="true" is_night="false" code="example6piece" description="Example - 6 piece" file_prefix = "" />
+    <CubemapReplacement size="1024" is_split_format="true" is_night="true" code="exampleNight6piece" description="Example Night - 6 piece" file_prefix = "night_" />
   </CubemapReplacements>
 </CubemapReplacementsConfig>
