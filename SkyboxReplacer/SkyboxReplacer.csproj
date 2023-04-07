@@ -33,6 +33,7 @@
     <Compile Include="Configuration\CubemapReplacement.cs" />
     <Compile Include="Configuration\CubemapReplacementsConfig.cs" />
     <Compile Include="CubemapManager.cs" />
+    <Compile Include="CubemapMonitor.cs" />
     <Compile Include="LoadingExtension.cs" />
     <Compile Include="Mod.cs" />
     <Compile Include="Options.cs" />

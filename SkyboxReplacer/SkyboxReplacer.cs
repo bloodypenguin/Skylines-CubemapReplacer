@@ -17,6 +17,9 @@ namespace SkyboxReplacer
         private static Cubemap vanillaNightCubemap;
         private static Cubemap customNightCubemap;
 
+        private static Cubemap currentDayCubemap;
+        private static Cubemap currentNightCubemap;
+
         public static void Initialize()
         {
             vanillaDayCubemap = Object.FindObjectOfType<RenderProperties>().m_cubemap;
@@ -27,9 +30,13 @@ namespace SkyboxReplacer
 
         public static void Revert()
         {
-            RevertDayCubemap();
-            RevertNightCubemap();
+            SetDayCubemap(Vanilla);
+            SetNightCubemap(Vanilla);
         }
+
+        public static Cubemap GetDayCubemap() => currentDayCubemap;
+
+        public static Cubemap GetNightCubemap() => currentNightCubemap;
 
         public static void SetDayCubemap(string code)
         {
@@ -37,12 +44,14 @@ namespace SkyboxReplacer
             {
                 return;
             }
+
             if (Vanilla.Equals(code))
             {
                 RevertDayCubemap();
+                currentDayCubemap = vanillaDayCubemap;
                 return;
             }
-            ReplaceCubemap(CubemapManager.GetDayReplacement(code));
+            currentDayCubemap = ReplaceCubemap(CubemapManager.GetDayReplacement(code));
         }
 
         public static void SetNightCubemap(string code)
@@ -56,7 +65,7 @@ namespace SkyboxReplacer
                 RevertNightCubemap();
                 return;
             }
-            ReplaceCubemap(CubemapManager.GetNightReplacement(code));
+            currentNightCubemap = ReplaceCubemap(CubemapManager.GetNightReplacement(code));
         }
 
         private static void RevertDayCubemap()
@@ -67,7 +76,6 @@ namespace SkyboxReplacer
             }
             GameObject.Destroy(customDayCubemap);
             customDayCubemap = null;
-            Shader.SetGlobalTexture("_EnvironmentCubemap", vanillaDayCubemap);
         }
 
         private static void RevertNightCubemap()
@@ -78,7 +86,6 @@ namespace SkyboxReplacer
             }
             GameObject.Destroy(customNightCubemap);
             customNightCubemap = null;
-            Object.FindObjectOfType<DayNightProperties>().m_OuterSpaceCubemap = vanillaNightCubemap;
         }
 
         public static void ReloadSelectedCubemaps()
@@ -87,7 +94,7 @@ namespace SkyboxReplacer
             SetNightCubemap(OptionsWrapper<Options>.Options.CubemapNight);
         }
 
-        private static void ReplaceCubemap(CubemapReplacement replacement)
+        private static Cubemap ReplaceCubemap(CubemapReplacement replacement)
         {
             if (replacement.IsNight)
             {
@@ -141,14 +148,13 @@ namespace SkyboxReplacer
             cubemap.Apply();
             if (replacement.IsNight)
             {
-                Object.FindObjectOfType<DayNightProperties>().m_OuterSpaceCubemap = cubemap;
                 customNightCubemap = cubemap;
             }
             else
             {
-                Shader.SetGlobalTexture("_EnvironmentCubemap", cubemap);
                 customDayCubemap = cubemap;
             }
+            return cubemap;
         }
 
         private static void SetCubemapFaceSolid(Texture2D texture, CubemapFace face, Cubemap cubemap, int positionY, int positionX)
