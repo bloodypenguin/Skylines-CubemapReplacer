@@ -11,6 +11,8 @@ namespace SkyboxReplacer.Configuration
         public bool SplitFormat = false ;
         [XmlAttribute("is_outer_space")]
         public bool IsOuterSpace = false;
+        [XmlAttribute("is_night")]
+        public bool IsNight = false;
         [XmlAttribute("code")]
         public string Code = "";
         [XmlAttribute("description")]

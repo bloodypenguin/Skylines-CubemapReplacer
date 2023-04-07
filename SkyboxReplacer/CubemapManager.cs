@@ -118,7 +118,7 @@ namespace SkyboxReplacer
                             }
                             OuterSpaceCubemaps.Add(replacement.Code, replacement);
                         }
-                        else if (replacement.TimePeriod == "day")
+                        else if (replacement.TimePeriod == "day" || !replacement.IsNight)
                         {
                             if (DayCubemaps.ContainsKey(replacement.Code))
                             {
@@ -127,7 +127,7 @@ namespace SkyboxReplacer
                             }
                             DayCubemaps.Add(replacement.Code, replacement);
                         }
-                        else if (replacement.TimePeriod == "night")
+                        else if (replacement.TimePeriod == "night" || replacement.IsNight)
                         {
                             if (NightCubemaps.ContainsKey(replacement.Code))
                             {

@@ -135,11 +135,11 @@ namespace SkyboxReplacer
             }
             else
             {
-                if (replacement.TimePeriod == "night")
+                if (replacement.TimePeriod == "night" || replacement.IsNight)
                 {
                     RevertNightCubemap();
                 }
-                else if (replacement.TimePeriod == "day")
+                else if (replacement.TimePeriod == "day" || !replacement.IsNight)
                 {
                     RevertDayCubemap();
                 }
@@ -193,11 +193,11 @@ namespace SkyboxReplacer
             }
             else
             {
-                if (replacement.TimePeriod == "night")
+                if (replacement.TimePeriod == "night" || replacement.IsNight)
                 {
                     customNightCubemap = cubemap;
                 }
-                else if (replacement.TimePeriod == "day")
+                else if (replacement.TimePeriod == "day" || !replacement.IsNight)
                 {
                     customDayCubemap = cubemap;
                 }
