@@ -3,20 +3,20 @@ using SkyboxReplacer.OptionsFramework.Attibutes;
 
 namespace SkyboxReplacer
 {
-    [Options("CubemapReplacer")]
+    [Options("ReflectionTextureChanger")]
     public class Options
     {
 
         [XmlElement("cubemapDay")]
-        [DynamicDropDown("Cubemap - day", nameof(CubemapManager), nameof(CubemapManager.GetDayCubemaps), null, nameof(SkyboxReplacer), nameof(SkyboxReplacer.SetDayCubemap))]
+        [DynamicDropDown("Reflections - day", nameof(CubemapManager), nameof(CubemapManager.GetDayCubemaps), null, nameof(SkyboxReplacer), nameof(SkyboxReplacer.SetDayCubemap))]
         public string CubemapDay { set; get; } = SkyboxReplacer.Vanilla;
 
         [XmlElement("cubemapNight")]
-        [DynamicDropDown("Cubemap - night", nameof(CubemapManager), nameof(CubemapManager.GetNightCubemaps), null, nameof(SkyboxReplacer), nameof(SkyboxReplacer.SetNightCubemap))]
+        [DynamicDropDown("Reflections - night", nameof(CubemapManager), nameof(CubemapManager.GetNightCubemaps), null, nameof(SkyboxReplacer), nameof(SkyboxReplacer.SetNightCubemap))]
         public string CubemapNight { set; get; } = SkyboxReplacer.Vanilla;
         
         [XmlElement("cubemapOuterSpace")]
-        [DynamicDropDown("Cubemap - outer space", nameof(CubemapManager), nameof(CubemapManager.GetOuterSpaceCubemaps), null, nameof(SkyboxReplacer), nameof(SkyboxReplacer.SetOuterSpaceCubemap))]
+        [DynamicDropDown("Skybox - outer space at night", nameof(CubemapManager), nameof(CubemapManager.GetOuterSpaceCubemaps), null, nameof(SkyboxReplacer), nameof(SkyboxReplacer.SetOuterSpaceCubemap))]
         public string CubemapOuterSpace { set; get; } = SkyboxReplacer.Vanilla;
 
         [XmlIgnore]

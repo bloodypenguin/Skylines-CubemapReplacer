@@ -6,8 +6,8 @@ namespace SkyboxReplacer
 {
     public class Mod : IUserMod
     {
-        public string Name => "Cubemap Replacer";
-        public string Description => "Replaces skybox & window reflections";
+        public string Name => "Reflection Texture Changer";
+        public string Description => "Replaces the cubemap & reflections";
 
         public void OnSettingsUI(UIHelperBase helper)
         {
