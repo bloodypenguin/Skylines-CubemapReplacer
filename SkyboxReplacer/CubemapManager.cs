@@ -88,7 +88,7 @@ namespace SkyboxReplacer
                             continue;
                         }
                         replacement.Directory = pluginInfo.modPath;
-                        if (replacement.IsNight)
+                        if (replacement.IsOuterSpace)
                         {
                             if (NightCubemaps.ContainsKey(replacement.Code))
                             {

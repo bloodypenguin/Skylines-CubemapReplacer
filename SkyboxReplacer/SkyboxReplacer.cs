@@ -96,7 +96,7 @@ namespace SkyboxReplacer
 
         private static Cubemap ReplaceCubemap(CubemapReplacement replacement)
         {
-            if (replacement.IsNight)
+            if (replacement.IsOuterSpace)
             {
                 RevertNightCubemap();
             }
@@ -146,7 +146,7 @@ namespace SkyboxReplacer
             cubemap.filterMode = FilterMode.Trilinear;
             cubemap.SmoothEdges();
             cubemap.Apply();
-            if (replacement.IsNight)
+            if (replacement.IsOuterSpace)
             {
                 customNightCubemap = cubemap;
             }
