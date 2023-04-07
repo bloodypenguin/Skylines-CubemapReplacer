@@ -20,6 +20,9 @@ namespace SkyboxReplacer
 
         private static readonly Dictionary<string, CubemapReplacement> NightCubemaps =
             new Dictionary<string, CubemapReplacement>();
+        
+        private static readonly Dictionary<string, CubemapReplacement> OuterSpaceCubemaps =
+            new Dictionary<string, CubemapReplacement>();
 
 
         public static DropDownEntry<string>[] GetDayCubemaps()
@@ -47,6 +50,19 @@ namespace SkyboxReplacer
                 .ToArray());
             return entries.ToArray();
         }
+        
+        public static DropDownEntry<string>[] GetOuterSpaceCubemaps()
+        {
+            ImportFromMods();
+            var entries = new List<DropDownEntry<string>>()
+            {
+                new DropDownEntry<string>(SkyboxReplacer.Vanilla, "Vanilla"),
+            };
+            //TODO(earalov): load custom cubemaps
+            entries.AddRange(OuterSpaceCubemaps.Select(kvp => new DropDownEntry<string>(kvp.Key, kvp.Value.Description))
+                .ToArray());
+            return entries.ToArray();
+        }
 
         public static CubemapReplacement GetDayReplacement(string code)
         {
@@ -56,6 +72,11 @@ namespace SkyboxReplacer
         public static CubemapReplacement GetNightReplacement(string code)
         {
             return NightCubemaps[code];
+        }
+        
+        public static CubemapReplacement GetOuterSpaceReplacement(string code)
+        {
+            return OuterSpaceCubemaps[code];
         }
 
         public static void ImportFromMods()
@@ -90,6 +111,24 @@ namespace SkyboxReplacer
                         replacement.Directory = pluginInfo.modPath;
                         if (replacement.IsOuterSpace)
                         {
+                            if (OuterSpaceCubemaps.ContainsKey(replacement.Code))
+                            {
+                                UnityEngine.Debug.LogError("Invalid CubemapReplacements.xml of mod " + pluginInfo.name + ": outer space replacement code is already present!");
+                                continue;
+                            }
+                            OuterSpaceCubemaps.Add(replacement.Code, replacement);
+                        }
+                        else if (replacement.TimePeriod == "day")
+                        {
+                            if (DayCubemaps.ContainsKey(replacement.Code))
+                            {
+                                UnityEngine.Debug.LogError("Invalid CubemapReplacements.xml of mod " + pluginInfo.name + ": day replacement code is already present!");
+                                continue;
+                            }
+                            DayCubemaps.Add(replacement.Code, replacement);
+                        }
+                        else if (replacement.TimePeriod == "night")
+                        {
                             if (NightCubemaps.ContainsKey(replacement.Code))
                             {
                                 UnityEngine.Debug.LogError("Invalid CubemapReplacements.xml of mod " + pluginInfo.name + ": night replacement code is already present!");
@@ -99,12 +138,7 @@ namespace SkyboxReplacer
                         }
                         else
                         {
-                            if (DayCubemaps.ContainsKey(replacement.Code))
-                            {
-                                UnityEngine.Debug.LogError("Invalid CubemapReplacements.xml of mod " + pluginInfo.name + ": day replacement code is already present!");
-                                continue;
-                            }
-                            DayCubemaps.Add(replacement.Code, replacement);
+                            throw new Exception("Unknown type of replacement!"); //TODO improve
                         }
                     }
                 }

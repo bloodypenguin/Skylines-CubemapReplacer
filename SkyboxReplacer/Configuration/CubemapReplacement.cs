@@ -9,7 +9,7 @@ namespace SkyboxReplacer.Configuration
         public int Size = 1024;
         [XmlAttribute("is_split_format")]
         public bool SplitFormat = false ;
-        [XmlAttribute("is_night")]
+        [XmlAttribute("is_outer_space")]
         public bool IsOuterSpace = false;
         [XmlAttribute("code")]
         public string Code = "";
@@ -19,7 +19,7 @@ namespace SkyboxReplacer.Configuration
         public string FilePrefix = "";
         [XmlAttribute("time_period")]
         public string TimePeriod;
-        [XmlAttribute("weather_type")]
+        [XmlAttribute("weather")]
         public string WeatherType;
 
         [XmlIgnore]

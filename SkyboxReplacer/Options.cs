@@ -14,6 +14,10 @@ namespace SkyboxReplacer
         [XmlElement("cubemapNight")]
         [DynamicDropDown("Cubemap - night", nameof(CubemapManager), nameof(CubemapManager.GetNightCubemaps), null, nameof(SkyboxReplacer), nameof(SkyboxReplacer.SetNightCubemap))]
         public string CubemapNight { set; get; } = SkyboxReplacer.Vanilla;
+        
+        [XmlElement("cubemapOuterSpace")]
+        [DynamicDropDown("Cubemap - outer space", nameof(CubemapManager), nameof(CubemapManager.GetOuterSpaceCubemaps), null, nameof(SkyboxReplacer), nameof(SkyboxReplacer.SetOuterSpaceCubemap))]
+        public string CubemapOuterSpace { set; get; } = SkyboxReplacer.Vanilla;
 
         [XmlIgnore]
         [Button("Reload selected cubemaps", null, nameof(SkyboxReplacer), nameof(SkyboxReplacer.ReloadSelectedCubemaps))]

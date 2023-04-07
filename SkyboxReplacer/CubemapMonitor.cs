@@ -8,6 +8,7 @@ namespace SkyboxReplacer
     {
         private Cubemap cachedSelectedDayCubemap;
         private Cubemap cachedSelectedNightCubemap;
+        private Cubemap cachedSelectedOuterSpaceCubemap;
 
         public void Update()
         {
@@ -20,8 +21,14 @@ namespace SkyboxReplacer
             var selectedNightCubemap = SkyboxReplacer.GetNightCubemap();
             if (selectedNightCubemap != cachedSelectedNightCubemap)
             {
-                Object.FindObjectOfType<DayNightProperties>().m_OuterSpaceCubemap = selectedNightCubemap;
                 cachedSelectedNightCubemap = selectedNightCubemap;
+            }
+
+            var selectedOuterSpaceCubemap = SkyboxReplacer.GetOuterSpaceCubemap();
+            if (selectedOuterSpaceCubemap != cachedSelectedOuterSpaceCubemap)
+            {
+                Object.FindObjectOfType<DayNightProperties>().m_OuterSpaceCubemap = selectedNightCubemap;
+                cachedSelectedOuterSpaceCubemap = selectedOuterSpaceCubemap;
             }
 
             if (SimulationManager.instance.m_isNightTime)
@@ -36,7 +43,7 @@ namespace SkyboxReplacer
 
         public void OnDestroy()
         {
-            Object.FindObjectOfType<DayNightProperties>().m_OuterSpaceCubemap = cachedSelectedNightCubemap;
+            Object.FindObjectOfType<DayNightProperties>().m_OuterSpaceCubemap = cachedSelectedOuterSpaceCubemap;
             Shader.SetGlobalTexture("_EnvironmentCubemap", cachedSelectedDayCubemap);
         }
     }

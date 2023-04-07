@@ -12,31 +12,39 @@ namespace SkyboxReplacer
         public const string Vanilla = "vanilla";
 
         private static Cubemap vanillaDayCubemap;
-        private static Cubemap customDayCubemap;
-
         private static Cubemap vanillaNightCubemap;
+        private static Cubemap vanillaOuterSpaceCubemap;
+
+        private static Cubemap customDayCubemap;
         private static Cubemap customNightCubemap;
+        private static Cubemap customOuterSpaceCubemap;
 
         private static Cubemap currentDayCubemap;
         private static Cubemap currentNightCubemap;
+        private static Cubemap currentOuterSpaceCubemap;
 
         public static void Initialize()
         {
             vanillaDayCubemap = Object.FindObjectOfType<RenderProperties>().m_cubemap;
-            vanillaNightCubemap = Object.FindObjectOfType<DayNightProperties>().m_OuterSpaceCubemap;
+            vanillaNightCubemap = Object.FindObjectOfType<RenderProperties>().m_cubemap;            
+            vanillaOuterSpaceCubemap = Object.FindObjectOfType<DayNightProperties>().m_OuterSpaceCubemap;
             SetDayCubemap(OptionsWrapper<Options>.Options.CubemapDay);
             SetNightCubemap(OptionsWrapper<Options>.Options.CubemapNight);
+            SetOuterSpaceCubemap(OptionsWrapper<Options>.Options.CubemapOuterSpace);
         }
 
         public static void Revert()
         {
             SetDayCubemap(Vanilla);
             SetNightCubemap(Vanilla);
+            SetOuterSpaceCubemap(Vanilla);
         }
 
         public static Cubemap GetDayCubemap() => currentDayCubemap;
 
         public static Cubemap GetNightCubemap() => currentNightCubemap;
+        
+        public static Cubemap GetOuterSpaceCubemap() => currentOuterSpaceCubemap;
 
         public static void SetDayCubemap(string code)
         {
@@ -67,6 +75,20 @@ namespace SkyboxReplacer
             }
             currentNightCubemap = ReplaceCubemap(CubemapManager.GetNightReplacement(code));
         }
+        
+        public static void SetOuterSpaceCubemap(string code)
+        {
+            if (!LoadingExtension.inGame)
+            {
+                return;
+            }
+            if (Vanilla.Equals(code))
+            {
+                RevertOuterSpaceCubemap();
+                return;
+            }
+            currentOuterSpaceCubemap = ReplaceCubemap(CubemapManager.GetOuterSpaceReplacement(code));
+        }
 
         private static void RevertDayCubemap()
         {
@@ -87,23 +109,42 @@ namespace SkyboxReplacer
             GameObject.Destroy(customNightCubemap);
             customNightCubemap = null;
         }
+        
+        private static void RevertOuterSpaceCubemap()
+        {
+            if (customOuterSpaceCubemap == null)
+            {
+                return;
+            }
+            GameObject.Destroy(customOuterSpaceCubemap);
+            customOuterSpaceCubemap = null;
+        }
 
         public static void ReloadSelectedCubemaps()
         {
             SetDayCubemap(OptionsWrapper<Options>.Options.CubemapDay);
             SetNightCubemap(OptionsWrapper<Options>.Options.CubemapNight);
+            SetOuterSpaceCubemap(OptionsWrapper<Options>.Options.CubemapOuterSpace);
         }
 
         private static Cubemap ReplaceCubemap(CubemapReplacement replacement)
         {
             if (replacement.IsOuterSpace)
             {
-                RevertNightCubemap();
+                RevertOuterSpaceCubemap();
             }
             else
             {
-                RevertDayCubemap();
+                if (replacement.TimePeriod == "night")
+                {
+                    RevertNightCubemap();
+                }
+                else if (replacement.TimePeriod == "day")
+                {
+                    RevertDayCubemap();
+                }
             }
+
             var cubemap = new Cubemap(replacement.Size, TextureFormat.ARGB32, true)
             {
                 name = "CubemapReplacerCubemap",
@@ -148,11 +189,18 @@ namespace SkyboxReplacer
             cubemap.Apply();
             if (replacement.IsOuterSpace)
             {
-                customNightCubemap = cubemap;
+                customOuterSpaceCubemap = cubemap;
             }
             else
             {
-                customDayCubemap = cubemap;
+                if (replacement.TimePeriod == "night")
+                {
+                    customNightCubemap = cubemap;
+                }
+                else if (replacement.TimePeriod == "day")
+                {
+                    customDayCubemap = cubemap;
+                }
             }
             return cubemap;
         }
