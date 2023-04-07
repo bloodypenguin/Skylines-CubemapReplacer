@@ -17,16 +17,10 @@ namespace SkyboxReplacer
         private static Cubemap vanillaNightCubemap;
         private static Cubemap customNightCubemap;
 
-        private static float defaultHorizon;
-        private static float defaultFog;
-
         public static void Initialize()
         {
             vanillaDayCubemap = Object.FindObjectOfType<RenderProperties>().m_cubemap;
             vanillaNightCubemap = Object.FindObjectOfType<DayNightProperties>().m_OuterSpaceCubemap;
-            defaultFog = Object.FindObjectOfType<RenderProperties>().m_fogHeight;
-            defaultHorizon = Object.FindObjectOfType<FogProperties>().m_HorizonHeight;
-            MinimizeHorizon(OptionsWrapper<Options>.Options.MinimizeHorizon);
             SetDayCubemap(OptionsWrapper<Options>.Options.CubemapDay);
             SetNightCubemap(OptionsWrapper<Options>.Options.CubemapNight);
         }
@@ -155,16 +149,6 @@ namespace SkyboxReplacer
                 Shader.SetGlobalTexture("_EnvironmentCubemap", cubemap);
                 customDayCubemap = cubemap;
             }
-        }
-
-        public static void MinimizeHorizon(bool minimize)
-        {
-            if (!LoadingExtension.inGame)
-            {
-                return;
-            }
-            Object.FindObjectOfType<FogProperties>().m_HorizonHeight = minimize ? Single.Epsilon : defaultHorizon;
-            Object.FindObjectOfType<RenderProperties>().m_fogHeight = minimize ? Single.Epsilon : defaultFog;
         }
 
         private static void SetCubemapFaceSolid(Texture2D texture, CubemapFace face, Cubemap cubemap, int positionY, int positionX)
